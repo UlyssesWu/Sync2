@@ -61,6 +61,11 @@
             Injectable Process
             </summary>
         </member>
+        <member name="F:VinjEx.InjectableProcess.SLEEP_TIME">
+            <summary>
+            default thread sleep time
+            </summary>
+        </member>
         <member name="E:VinjEx.InjectableProcess.OnClientResponse">
             <summary>
             Register by host. Fired when client send response.
@@ -73,7 +78,7 @@
         </member>
         <member name="P:VinjEx.InjectableProcess.SleepInterval">
             <summary>
-            How much time(second) dll thread will sleep once when idle.
+            How much time(ms) dll thread will sleep once when idle.
             Will pass to dll thread when call <see cref="M:VinjEx.InjectableProcess.Inject(System.String,System.String)"/>. Would be useless after that.
             </summary>
         </member>

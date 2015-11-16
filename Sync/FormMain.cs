@@ -205,9 +205,13 @@ namespace Sync
                     }
                     try
                     {
+                        bool listenForExit = !(Process.GetProcessesByName(txt_process.Text).Length>0);
                         _remoteProcess = Process.Start(path);
                         _remoteProcess.EnableRaisingEvents = true;
-                        _remoteProcess.Exited += (o, args) => { Application.Exit(); };
+                        if (listenForExit)
+                        {
+                            _remoteProcess.Exited += (o, args) => { Application.Exit(); };
+                        }
                         Thread.Sleep(waittime * 1000);
                     }
                     catch (Exception)
@@ -294,6 +298,12 @@ namespace Sync
 
             _ip = InjectableProcess.Create(handle);
             Thread.Sleep(200);//FIXED:Wait for injection complete
+
+            if (Program.Direct)
+            {
+                _ip.IsBackgroundThread = false;
+                _ip.OnClientExit += (sender, args) => Application.Exit();
+            }
 
             _injectResult = _ip.Inject(Path.Combine(Application.StartupPath, SYNC_DLL));
             
@@ -404,6 +414,7 @@ namespace Sync
             SyncEnabled = false;
             if (_ip == null) return;
             _ip.Eject();
+            rtxt_display.Text = DateTime.Now + " " + "已停止同步";
             Settings.Default.QQNum = txt_qq.Text;
             Settings.Default.AppName = txt_process.Text;
             if (VerifyPath(_qqPath))
