@@ -300,6 +300,8 @@ namespace Injection
         public override void OnUnload()
         {
             Send2QQ(_qq, "");
+            _usePInvoke = false;
+            Send2QQ(_qq, "");
             //Enabled = false;
             //Sema = false;
         }

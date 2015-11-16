@@ -116,5 +116,10 @@
             Eject the DLL
             </summary>
         </member>
+        <member name="E:VinjEx.InjectInterface.OnClientExit">
+            <summary>
+            used to stop dll thread
+            </summary>
+        </member>
     </members>
 </doc>

@@ -39,7 +39,7 @@ namespace Sync
         private Process _remoteProcess;
 
         private string _qqPath;
-        
+
         /// <summary>
         /// 通过进程寻找QQ路径（需要QQ已打开）
         /// </summary>
@@ -98,7 +98,7 @@ namespace Sync
         /// <returns></returns>
         private bool VerifyPath(string selectedPath)
         {
-            return !string.IsNullOrWhiteSpace(selectedPath) && File.Exists(Path.Combine(selectedPath,"Common.dll")) && File.Exists(Path.Combine(selectedPath, "CPHelper.dll"));
+            return !string.IsNullOrWhiteSpace(selectedPath) && File.Exists(Path.Combine(selectedPath, "Common.dll")) && File.Exists(Path.Combine(selectedPath, "CPHelper.dll"));
         }
 
         public FormMain()
@@ -183,7 +183,7 @@ namespace Sync
                             {
                                 _qqPath = lines[4]; //一定要有效才行！
                             }
-                            
+
                         }
                         if (String.IsNullOrEmpty(path) || !File.Exists(path))
                         {
@@ -205,13 +205,10 @@ namespace Sync
                     }
                     try
                     {
-                        bool listenForExit = !(Process.GetProcessesByName(txt_process.Text).Length>0);
                         _remoteProcess = Process.Start(path);
                         _remoteProcess.EnableRaisingEvents = true;
-                        if (listenForExit)
-                        {
-                            _remoteProcess.Exited += (o, args) => { Application.Exit(); };
-                        }
+                        _remoteProcess.Exited += (o, args) => { Application.Exit(); };
+
                         Thread.Sleep(waittime * 1000);
                     }
                     catch (Exception)
@@ -224,7 +221,7 @@ namespace Sync
                 {
                     int count = 10;
                     btnHook_Click(null, null);
-                    while (_injectResult == 0 && count>0)
+                    while (_injectResult == 0 && count > 0)
                     {
                         btnHook_Click(null, null);
                         count--;
@@ -253,9 +250,9 @@ namespace Sync
                 var dllPath = Path.Combine(_qqPath, PINVOKE_DLL);
                 if (!File.Exists(dllPath))
                 {
-                    File.Copy(PINVOKE_DLL,dllPath,true); //BUG:今后版本更新，可能需要覆盖DLL
+                    File.Copy(PINVOKE_DLL, dllPath, true); //BUG:今后版本更新，可能需要覆盖DLL
                 }
-                
+
             }
             int q;
 
@@ -301,12 +298,12 @@ namespace Sync
 
             if (Program.Direct)
             {
-                _ip.IsBackgroundThread = false;
+                //_ip.IsBackgroundThread = false;
                 _ip.OnClientExit += (sender, args) => Application.Exit();
             }
 
             _injectResult = _ip.Inject(Path.Combine(Application.StartupPath, SYNC_DLL));
-            
+
             if (_injectResult == 0)
             {
                 rtxt_display.Text = "程序注入失败。";
@@ -321,7 +318,7 @@ namespace Sync
             SendCommand(Command.SetAppType, txt_process.Text);
 
             SendEncoding(Settings.Default.Encoding.ParseEnum<QQSolution>());
-            
+
         }
 
         /// <summary>
@@ -331,7 +328,7 @@ namespace Sync
         /// <param name="param">命令参数</param>
         /// <param name="sync">是否继续同步</param>
         /// <returns></returns>
-        private bool SendCommand(Command cmd = Command.SetQQ, string param = "",bool sync = true)
+        private bool SendCommand(Command cmd = Command.SetQQ, string param = "", bool sync = true)
         {
             try
             {
@@ -370,7 +367,7 @@ namespace Sync
                             qq += "|" + Command.SetQQPath.ToString() + "|" + param;
                             break;
                     }
-                    
+
                     bool result = _ip.Command(qq);
                     if (!result)
                     {
@@ -412,7 +409,8 @@ namespace Sync
         private void btnUnhook_Click(object sender, EventArgs e)
         {
             SyncEnabled = false;
-            if (_ip == null) return;
+            if (_ip == null)
+                return;
             _ip.Eject();
             rtxt_display.Text = DateTime.Now + " " + "已停止同步";
             Settings.Default.QQNum = txt_qq.Text;
@@ -448,39 +446,42 @@ namespace Sync
                 Settings.Default.Save();
             }
 
-            //以下代码已失效
-            //if (_ip != null && !Program.Direct)
-            //{
-            //    DialogResult r = MessageBox.Show("退出后要保持同步吗？", "退出提示", MessageBoxButtons.YesNoCancel);
-            //    if (r == DialogResult.Yes) //要同步，直接退出
-            //    {
-            //        return;
-            //    }
-            //    if (r == DialogResult.Cancel) //取消退出
-            //    {
-            //        e.Cancel = true; //撤销关闭
-            //        return;
-            //    }
-            //    if (r == DialogResult.No) //不要同步，结束注入
-            //    {
-            //        //继续往下执行
-            //    }
-            //}
-
+            //以下代码已复活
             if (_ip != null && !Program.Direct)
             {
-                DialogResult r = MessageBox.Show("要退出吗？", "退出提示", MessageBoxButtons.OKCancel);
-                if (r == DialogResult.Cancel)
+                DialogResult r = MessageBox.Show("退出后要保持同步吗？", "退出提示", MessageBoxButtons.YesNoCancel);
+                if (r == DialogResult.Yes) //要同步，直接退出
+                {
+                    return;
+                }
+                if (r == DialogResult.Cancel) //取消退出
                 {
                     e.Cancel = true; //撤销关闭
                     return;
                 }
+                if (r == DialogResult.No) //不要同步，结束注入
+                {
+                    SendCommand(Command.Close);
+                    Helper.Send2QQ(txt_qq.Text, "");
+                    _ip?.Eject();
+                    _ip = null;
+                }
             }
 
-            SendCommand(Command.Close);
-            Helper.Send2QQ(txt_qq.Text,"");
-            _ip?.Eject();
-            _ip = null;
+            //if (_ip != null && !Program.Direct)
+            //{
+            //    //DialogResult r = MessageBox.Show("要退出吗？", "退出提示", MessageBoxButtons.OKCancel);
+            //    //if (r == DialogResult.Cancel)
+            //    //{
+            //    //    e.Cancel = true; //撤销关闭
+            //    //    return;
+            //    //}
+
+            //    SendCommand(Command.Close);
+            //    Helper.Send2QQ(txt_qq.Text, "");
+            //    _ip?.Eject();
+            //    _ip = null;
+            //}
         }
 
         private void btn_change_Click(object sender, EventArgs e)
