@@ -159,13 +159,19 @@ namespace Injection
                                 if (!doubleLast.Contains("千千静听") && !doubleLast.Contains("音量:") && doubleLast.Contains(" - "))
                                 {
                                     NowPlaying = _lastText.Trim();
+                                    if (!string.IsNullOrWhiteSpace(NowPlaying))
+                                    {
+                                        Send2QQ(_qq, NowPlaying);
+                                    }
+                                }
+                                else if (_lastText.Contains("停止"))
+                                {
                                     Send2QQ(_qq, NowPlaying);
                                 }
                             }
                             else if (lpString.Contains("停止"))
                             {
-                                NowPlaying = "";
-                                Send2QQ(_qq, NowPlaying);
+                                Send2QQ(_qq, "");
                             }
 
                         }

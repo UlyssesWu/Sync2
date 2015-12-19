@@ -471,6 +471,12 @@ namespace Sync
             //以下代码已复活
             if (_ip != null && !Program.Direct)
             {
+                if (!SyncEnabled)
+                {
+                    _ip?.Eject();
+                    _ip = null;
+                    return;
+                }
                 DialogResult r = MessageBox.Show("退出后要保持同步吗？", "退出提示", MessageBoxButtons.YesNoCancel);
                 if (r == DialogResult.Yes) //要同步，直接退出
                 {
