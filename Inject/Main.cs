@@ -231,6 +231,7 @@ namespace Injection
                         try
                         {
                             Environment.CurrentDirectory = _qqPath;
+                            CPHelper.SetDllDirectory(_qqPath);
                         }
                         catch (Exception)
                         {

@@ -266,6 +266,26 @@ namespace Sync
             }
         }
 
+        //public static void Test()
+        //{
+        //    string targetProcess = "cloudmusic";
+        //    if (Process.GetProcessesByName(targetProcess).Length <= 0)
+        //    {
+        //        //rtxt_display.Text = ("找不到 " + targetProcess);
+        //        return;
+        //    }
+        //    var processes = Process.GetProcessesByName(targetProcess);
+        //    int handle = 0;
+        //    foreach (var process in processes)
+        //    {
+        //        if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != "." && !process.MainWindowTitle.Contains("网易云音乐 Beta"))
+        //        {
+        //            handle = process.Id;
+        //            break;
+        //        }
+        //    }
+        //}
+
         /// <summary>
         /// 注入进程
         /// </summary>
@@ -282,7 +302,7 @@ namespace Sync
             int handle = 0;
             foreach (var process in processes)
             {
-                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != ".")
+                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != "." && !process.MainWindowTitle.Contains("网易云音乐 Beta")) //TODO: Support CloudMusic UWP
                 {
                     handle = process.Id;
                     break;
@@ -294,6 +314,7 @@ namespace Sync
             }
 
             _ip = InjectableProcess.Create(handle);
+            _ip.SleepInterval = 10000;
             Thread.Sleep(200);//FIXED:Wait for injection complete
 
             if (Program.Direct)
@@ -302,7 +323,8 @@ namespace Sync
                 _ip.OnClientExit += (sender, args) => Application.Exit();
             }
 
-            _injectResult = _ip.Inject(Path.Combine(Application.StartupPath, SYNC_DLL));
+            //_injectResult = _ip.Inject(Path.Combine(Application.StartupPath, SYNC_DLL), Path.Combine(Application.StartupPath, SYNC_DLL));
+            _injectResult = _ip.Inject(Path.Combine(Application.StartupPath, SYNC_DLL), null);
 
             if (_injectResult == 0)
             {

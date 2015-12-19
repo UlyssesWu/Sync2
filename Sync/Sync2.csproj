@@ -69,9 +69,6 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
-    <Reference Include="VinjEx">
-      <HintPath>..\DLL\VinjEx.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormMain.cs">
@@ -137,6 +134,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Projects\VinjEx\VinjEx\VinjEx.csproj">
+      <Project>{fcc2c253-ca39-4352-8c3c-e7ad478b8c60}</Project>
+      <Name>VinjEx</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Inject\SyncInject.csproj">
       <Project>{1f86b51c-f1ca-4382-93df-b39c553814f6}</Project>
       <Name>SyncInject</Name>
