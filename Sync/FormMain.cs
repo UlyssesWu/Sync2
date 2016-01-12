@@ -278,9 +278,10 @@ namespace Sync
         //    int handle = 0;
         //    foreach (var process in processes)
         //    {
-        //        if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != "." && !process.MainWindowTitle.Contains("网易云音乐 Beta"))
+        //        if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != "." && !process.MainWindowTitle.Contains("网易云音乐B"))
         //        {
         //            handle = process.Id;
+        //            var t = process.Modules[0];
         //            break;
         //        }
         //    }
@@ -302,8 +303,21 @@ namespace Sync
             int handle = 0;
             foreach (var process in processes)
             {
-                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != "." && !process.MainWindowTitle.Contains("网易云音乐 Beta")) //TODO: Support CloudMusic UWP
+                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != ".") //TODO: Support CloudMusic UWP
                 {
+                    try
+                    {
+                        if (process.MainModule.FileVersionInfo.FileDescription == "CloudMusic")
+                        {
+                            continue;
+                        }
+                    }
+                    catch (Exception)
+                    {
+                        //throw;
+                        continue;
+                    }
+
                     handle = process.Id;
                     break;
                 }
