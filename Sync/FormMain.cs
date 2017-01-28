@@ -5,11 +5,17 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
+using Sync.NetEaseUwp;
 using Sync.Properties;
 using VinjEx;
 
 namespace Sync
 {
+    public enum AppType
+    {
+        网易云音乐 = 1, 千千静听 = 2, 百度音乐 = 3,
+        网易云音乐UWP = 4,
+    }
     public enum QQSolution
     {
         OldVersion = 3,
@@ -34,11 +40,15 @@ namespace Sync
         public const string SYNC_DLL = "SyncInject.dll";
         public const bool NOTIFY = true;
 
+        private Dictionary<AppType, string> _appMap;
+
         private InjectableProcess _ip;
         private int _injectResult;
         private Process _remoteProcess;
 
         private string _qqPath;
+        private AppType _currentAppType = AppType.网易云音乐;
+        private NetEaseUwpWatcher _uwpWatcher;
 
         /// <summary>
         /// 通过进程寻找QQ路径（需要QQ已打开）
@@ -101,22 +111,35 @@ namespace Sync
             return !string.IsNullOrWhiteSpace(selectedPath) && File.Exists(Path.Combine(selectedPath, "Common.dll")) && File.Exists(Path.Combine(selectedPath, "CPHelper.dll"));
         }
 
+        private void UpdateAppCbo()
+        {
+            cbo_process.DataSource = new BindingSource(_appMap, null);
+        }
+
         public FormMain()
         {
             InitializeComponent();
+            _appMap = new Dictionary<AppType, string>()
+            {
+                {AppType.网易云音乐, "cloudmusic" },
+                {AppType.千千静听, "TTPlayer" },
+                {AppType.网易云音乐UWP, "NeteaseMusic" },
+            };
         }
 
-        private void Form1_Load(object sender, EventArgs e)
+        private void FormMain_Load(object sender, EventArgs e)
         {
-            txt_process.Items.Add("TTPlayer");
-            txt_process.Items.Add("cloudmusic");
+            cbo_process.DisplayMember = "Key";
+            cbo_process.ValueMember = "Value";
+            UpdateAppCbo();
+
             if (!string.IsNullOrWhiteSpace(Settings.Default.QQNum))
             {
                 txt_qq.Text = Settings.Default.QQNum;
             }
             if (!string.IsNullOrWhiteSpace(Settings.Default.AppName))
             {
-                txt_process.Text = Settings.Default.AppName;
+                cbo_process.SelectedValue = Settings.Default.AppName;
             }
             if (!string.IsNullOrWhiteSpace(Settings.Default.Encoding))
             {
@@ -160,7 +183,7 @@ namespace Sync
                         }
                         if (lines.Count > 1)
                         {
-                            txt_process.Text = lines[1];
+                            cbo_process.SelectedValue = lines[1];
                         }
                         if (lines.Count > 2)
                         {
@@ -187,12 +210,12 @@ namespace Sync
                         }
                         if (String.IsNullOrEmpty(path) || !File.Exists(path))
                         {
-                            path = txt_process.Text + ".exe";
+                            path = cbo_process.SelectedValue + ".exe";
                         }
                     }
                     else
                     {
-                        string p = Register.GetPath(txt_process.Text + ".exe");
+                        string p = Register.GetPath(cbo_process.SelectedValue + ".exe");
                         if (String.IsNullOrEmpty(p))
                         {
                             p = Register.GetPath("cloudmusic.exe");
@@ -232,8 +255,18 @@ namespace Sync
 
         private void btnHook_Click(object sender, EventArgs e)
         {
+            int qqNum;
+
+            if (!Int32.TryParse(txt_qq.Text, out qqNum))
+            {
+                rtxt_display.Text = "QQ号码格式不正确";
+                return;
+            }
+
+            bool usePInvoke = false;
             if (GetSolution(cbo_solution.Text) == QQSolution.PInvoke)
             {
+                usePInvoke = true;
                 if (string.IsNullOrWhiteSpace(_qqPath) || !VerifyPath(_qqPath))
                 {
                     if (!AskForQQPath())
@@ -250,49 +283,40 @@ namespace Sync
                 var dllPath = Path.Combine(_qqPath, PINVOKE_DLL);
                 if (!File.Exists(dllPath))
                 {
-                    File.Copy(PINVOKE_DLL, dllPath, true); //BUG:今后版本更新，可能需要覆盖DLL
+                    File.Copy(PINVOKE_DLL, dllPath, true);
                 }
-
+                Directory.SetCurrentDirectory(_qqPath);
+                Helper.SetDllDirectory(_qqPath);
             }
-            int q;
 
-            if (Int32.TryParse(txt_qq.Text, out q))
+            _currentAppType = ((KeyValuePair<AppType, string>)(cbo_process.SelectedItem)).Key;
+            _uwpWatcher?.Dispose();
+            _uwpWatcher = null;
+
+            if (_currentAppType == AppType.网易云音乐UWP)
             {
-                Injection();
+                _uwpWatcher = new NetEaseUwpWatcher()
+                {
+                    QQ = txt_qq.Text,
+                    UsePInvoke = usePInvoke,
+                    UseForceEncoding = GetSolution(cbo_solution.Text) == QQSolution.ForceEncoding
+                };
+                _uwpWatcher.Start();
+                rtxt_display.Text = "已开始监视播放器";
             }
             else
             {
-                rtxt_display.Text = "QQ号码格式不正确";
+                Injection();
             }
+        
         }
-
-        //public static void Test()
-        //{
-        //    string targetProcess = "cloudmusic";
-        //    if (Process.GetProcessesByName(targetProcess).Length <= 0)
-        //    {
-        //        //rtxt_display.Text = ("找不到 " + targetProcess);
-        //        return;
-        //    }
-        //    var processes = Process.GetProcessesByName(targetProcess);
-        //    int handle = 0;
-        //    foreach (var process in processes)
-        //    {
-        //        if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != "." && !process.MainWindowTitle.Contains("网易云音乐B"))
-        //        {
-        //            handle = process.Id;
-        //            var t = process.Modules[0];
-        //            break;
-        //        }
-        //    }
-        //}
 
         /// <summary>
         /// 注入进程
         /// </summary>
         public void Injection()
         {
-            string targetProcess = txt_process.Text;
+            string targetProcess = cbo_process.SelectedValue.ToString();
             if (Process.GetProcessesByName(targetProcess).Length <= 0)
             {
                 rtxt_display.Text = ("找不到 " + targetProcess);
@@ -351,7 +375,7 @@ namespace Sync
 
             SendCommand(Command.SetQQPath, _qqPath);
 
-            SendCommand(Command.SetAppType, txt_process.Text);
+            SendCommand(Command.SetAppType, cbo_process.SelectedValue.ToString());
 
             SendEncoding(Settings.Default.Encoding.ParseEnum<QQSolution>());
 
@@ -430,6 +454,12 @@ namespace Sync
         /// <param name="e"></param>
         private void GetNowPlaying(object sender, EventArgs e)
         {
+            if (_currentAppType == AppType.网易云音乐UWP)
+            {
+                //MessageBox.Show(string.IsNullOrWhiteSpace(_uwpWatcher?.CurrentSong) ? "好像没有检测到歌曲名字呢。\n请确认当前是否已成功启用同步" : _uwpWatcher?.CurrentSong, "Sync2", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+                MessageBox.Show(string.IsNullOrWhiteSpace(_uwpWatcher?.CurrentSong) ? "好像没有检测到歌曲名字呢。\n请确认当前是否已成功启用同步" : _uwpWatcher?.CurrentSong, "Sync2", MessageBoxButtons.OK, MessageBoxIcon.None);
+                return;
+            }
             try
             {
                 SendCommand(Command.ShowNowPlaying);
@@ -445,12 +475,17 @@ namespace Sync
         private void btnUnhook_Click(object sender, EventArgs e)
         {
             SyncEnabled = false;
+            _uwpWatcher?.Pause();
+            if (_currentAppType == AppType.网易云音乐UWP)
+            {
+                rtxt_display.Text = "已停止监视播放器";
+            }
             if (_ip == null)
                 return;
             _ip.Eject();
             rtxt_display.Text = DateTime.Now + " " + "已停止同步";
             Settings.Default.QQNum = txt_qq.Text;
-            Settings.Default.AppName = txt_process.Text;
+            Settings.Default.AppName = cbo_process.SelectedValue.ToString();
             if (VerifyPath(_qqPath))
             {
                 Settings.Default.QQPath = _qqPath;
@@ -476,7 +511,7 @@ namespace Sync
             if (!Program.Direct)
             {
                 Settings.Default.QQNum = txt_qq.Text;
-                Settings.Default.AppName = txt_process.Text;
+                Settings.Default.AppName = cbo_process.SelectedValue.ToString();
                 Settings.Default.Encoding = GetSolution(cbo_solution.Text).ToString();
                 Settings.Default.QQPath = _qqPath;
                 Settings.Default.Save();
@@ -510,24 +545,30 @@ namespace Sync
                 }
             }
 
-            //if (_ip != null && !Program.Direct)
-            //{
-            //    //DialogResult r = MessageBox.Show("要退出吗？", "退出提示", MessageBoxButtons.OKCancel);
-            //    //if (r == DialogResult.Cancel)
-            //    //{
-            //    //    e.Cancel = true; //撤销关闭
-            //    //    return;
-            //    //}
-
-            //    SendCommand(Command.Close);
-            //    Helper.Send2QQ(txt_qq.Text, "");
-            //    _ip?.Eject();
-            //    _ip = null;
-            //}
+            if (_currentAppType == AppType.网易云音乐UWP)
+            {
+                _uwpWatcher?.Dispose();
+                _uwpWatcher = null;
+            }
         }
 
         private void btn_change_Click(object sender, EventArgs e)
         {
+            _currentAppType = ((KeyValuePair<AppType, string>)(cbo_process.SelectedItem)).Key;
+
+            if (_currentAppType == AppType.网易云音乐UWP)
+            {
+                _uwpWatcher = new NetEaseUwpWatcher()
+                {
+                    QQ = txt_qq.Text,
+                    UsePInvoke = GetSolution(cbo_solution.Text) == QQSolution.PInvoke,
+                    UseForceEncoding = GetSolution(cbo_solution.Text) == QQSolution.ForceEncoding
+                };
+                _uwpWatcher.Start();
+                rtxt_display.Text = "已更新监视状态";
+                return;
+            }
+
             if (_ip != null)
             {
                 SendCommand();
@@ -536,22 +577,6 @@ namespace Sync
                     SendCommand(Command.SetQQPath, _qqPath);
                 }
                 SendEncoding(GetSolution(cbo_solution.Text));
-            }
-        }
-
-        private void txt_process_TextChanged(object sender, EventArgs e)
-        {
-            switch (txt_process.Text.ToLower())
-            {
-                case "ttplayer":
-                    lbl_name.Text = "千千静听";
-                    break;
-                case "cloudmusic":
-                    lbl_name.Text = "网易云音乐";
-                    break;
-                default:
-                    lbl_name.Text = "播放器进程";
-                    break;
             }
         }
 

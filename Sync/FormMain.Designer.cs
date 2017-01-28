@@ -43,7 +43,6 @@ namespace Sync
             this.rtxt_display = new System.Windows.Forms.Label();
             this.btn_now = new System.Windows.Forms.Button();
             this.btn_change = new System.Windows.Forms.Button();
-            this.txt_process = new System.Windows.Forms.ComboBox();
             this.lbl_name = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
@@ -54,6 +53,7 @@ namespace Sync
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.cbo_solution = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.cbo_process = new System.Windows.Forms.ComboBox();
             this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -133,20 +133,6 @@ namespace Sync
             this.btn_change.UseVisualStyleBackColor = true;
             this.btn_change.Click += new System.EventHandler(this.btn_change_Click);
             // 
-            // txt_process
-            // 
-            this.txt_process.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txt_process.Font = new System.Drawing.Font("微软雅黑", 10.18868F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txt_process.FormattingEnabled = true;
-            this.txt_process.Location = new System.Drawing.Point(92, 12);
-            this.txt_process.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
-            this.txt_process.Name = "txt_process";
-            this.txt_process.Size = new System.Drawing.Size(289, 28);
-            this.txt_process.TabIndex = 10;
-            this.txt_process.Text = "TTPlayer";
-            this.txt_process.TextChanged += new System.EventHandler(this.txt_process_TextChanged);
-            // 
             // lbl_name
             // 
             this.lbl_name.AutoSize = true;
@@ -154,7 +140,7 @@ namespace Sync
             this.lbl_name.Name = "lbl_name";
             this.lbl_name.Size = new System.Drawing.Size(74, 19);
             this.lbl_name.TabIndex = 11;
-            this.lbl_name.Text = "播放器进程";
+            this.lbl_name.Text = "播放器选择";
             // 
             // label2
             // 
@@ -221,7 +207,6 @@ namespace Sync
             this.cbo_solution.Size = new System.Drawing.Size(289, 27);
             this.cbo_solution.TabIndex = 10;
             this.toolTip1.SetToolTip(this.cbo_solution, "由于QQ的接口变动因而需要选择");
-            this.cbo_solution.TextChanged += new System.EventHandler(this.txt_process_TextChanged);
             // 
             // label1
             // 
@@ -232,16 +217,25 @@ namespace Sync
             this.label1.TabIndex = 11;
             this.label1.Text = "同步策略";
             // 
-            // MainForm
+            // cbo_process
+            // 
+            this.cbo_process.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbo_process.FormattingEnabled = true;
+            this.cbo_process.Location = new System.Drawing.Point(92, 13);
+            this.cbo_process.Name = "cbo_process";
+            this.cbo_process.Size = new System.Drawing.Size(289, 27);
+            this.cbo_process.TabIndex = 13;
+            // 
+            // FormMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(393, 378);
+            this.Controls.Add(this.cbo_process);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.cbo_solution);
             this.Controls.Add(this.lbl_name);
-            this.Controls.Add(this.txt_process);
             this.Controls.Add(this.btn_change);
             this.Controls.Add(this.btn_now);
             this.Controls.Add(this.rtxt_display);
@@ -253,10 +247,10 @@ namespace Sync
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
-            this.Name = "MainForm";
+            this.Name = "FormMain";
             this.Text = "Sync->QQ  by Ulysses";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.Load += new System.EventHandler(this.FormMain_Load);
             this.SizeChanged += new System.EventHandler(this.MainForm_SizeChanged);
             this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
@@ -272,7 +266,6 @@ namespace Sync
         private Label rtxt_display;
         private Button btn_now;
         private Button btn_change;
-        private ComboBox txt_process;
         private Label lbl_name;
         private Label label2;
         private NotifyIcon notifyIcon1;
@@ -283,6 +276,7 @@ namespace Sync
         private ToolTip toolTip1;
         private ComboBox cbo_solution;
         private Label label1;
+        private ComboBox cbo_process;
     }
 }
 

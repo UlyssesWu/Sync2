@@ -70,5 +70,17 @@ namespace Sync.Properties {
                 this["QQPath"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string NetEaseUwpPath {
+            get {
+                return ((string)(this["NetEaseUwpPath"]));
+            }
+            set {
+                this["NetEaseUwpPath"] = value;
+            }
+        }
     }
 }
