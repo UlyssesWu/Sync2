@@ -1,48 +1,62 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
+using LinqToDB;
+using LinqToDB.Data;
+using LinqToDB.DataProvider.SQLite;
+using LinqToDB.Mapping;
+
 // ReSharper disable InconsistentNaming
 
 namespace Sync.NetEaseUwp
 {
-    internal class NetEaseUwpContext : DbContext
+    internal class NetEaseUwpContext : DataConnection
     {
-        public NetEaseUwpContext(string nameOrConnectionString) : base(new SQLiteConnection(nameOrConnectionString), true)
+        public NetEaseUwpContext(string nameOrConnectionString) : base(new SQLiteDataProvider(), nameOrConnectionString)
         {
         }
 
-        public DbSet<PlayHistory> PlayHistories { get; set; }
-        public DbSet<PlayQueue> PlayQueues { get; set; }
+        public ITable<PlayHistory> PlayHistories => GetTable<PlayHistory>();
+        public ITable<PlayQueue> PlayQueues => GetTable<PlayQueue>();
     }
 
     [Table("playhistory")]
     public class PlayHistory
     {
-        [Key]
+        [PrimaryKey, Identity]
         public string resourceid { get; set; }
+        [Column]
         public long resourcetype { get; set; }
+        [Column]
         public long userid { get; set; }
+        [Column]
         public string resourcedata { get; set; }
+        [Column]
         public long updatetime { get; set; }
+        [Column]
         public string extrainfo { get; set; }
     }
 
     [Table("playqueue")]
     public class PlayQueue
     {
-        [Key]
+        [PrimaryKey, Identity]
         public string id { get; set; }
+        [Column]
         public long trackid { get; set; }
+        [Column]
         public string trackdata { get; set; }
+        [Column]
         public string extradata { get; set; }
+        [Column]
         public string privilege { get; set; }
+        [Column]
         public string urlinfo { get; set; }
+        [Column]
         public long updatetime { get; set; }
+        [Column]
         public string extrainfo { get; set; }
     }
 }
