@@ -1,4 +1,4 @@
-#Sync2
+﻿#Sync2
 
 ###by Ulysses
 
@@ -6,9 +6,7 @@
 
 >*果然……没啥用的样子*   ——@bromine0x23
 
-目前支持 **网易云音乐（PC）** 及 **千千静听** 。
-
-最新版本（非主分支）现已支持 **网易云音乐UWP** 。
+目前支持 **网易云音乐（PC/UWP）** 及 **千千静听** 。
 
 在QQ 7.5（旧版同步方式）、QQ 7.6-8.6（新版同步方式）测试通过。
 
@@ -19,6 +17,8 @@
 [Easyhook](https://easyhook.github.io/)
 
 [VinjEx](https://github.com/UlyssesWu/VinjEx)
+
+以及一些可能变动的可从NuGet取得的三方库。
 
 ###LICENSE
 

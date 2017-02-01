@@ -31,7 +31,8 @@ namespace Injection
     }
     public enum AppType
     {
-        NetEaseCloud = 1, TTPlayer = 2, BaiduMusic = 3
+        NetEaseCloud = 1, TTPlayer = 2, BaiduMusic = 3,
+        NetEaseUwp = 4,
     }
     public class Main : Injectable
     {
@@ -51,22 +52,7 @@ namespace Injection
         {
 
         }
-
-
-        public static object ForceChangeEncoding(string text)
-        {
-            string s = text;
-            try
-            {
-                s = Encoding.Default.GetString(Encoding.UTF8.GetBytes(text));
-            }
-            catch (Exception)
-            {
-                return text;
-            }
-            return s;
-        }
-
+        
         public static AppType GetAppType()
         {
             if (_processName.StartsWith("cloudmusic"))
@@ -81,9 +67,22 @@ namespace Injection
             {
                 return AppType.BaiduMusic;
             }
-            return AppType.NetEaseCloud;
+            return AppType.NetEaseUwp;
         }
 
+        public static object ForceChangeEncoding(string text)
+        {
+            string s = text;
+            try
+            {
+                s = Encoding.Default.GetString(Encoding.UTF8.GetBytes(text));
+            }
+            catch (Exception)
+            {
+                return text;
+            }
+            return s;
+        }
 
         /// <summary>
         /// 发送到QQ
