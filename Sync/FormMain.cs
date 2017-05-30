@@ -327,7 +327,7 @@ namespace Sync
             int handle = 0;
             foreach (var process in processes)
             {
-                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != ".") //TODO: Support CloudMusic UWP
+                if (!String.IsNullOrEmpty(process.MainWindowTitle) && process.MainWindowTitle != ".")
                 {
                     try
                     {
@@ -341,7 +341,6 @@ namespace Sync
                         //throw;
                         continue;
                     }
-
                     handle = process.Id;
                     break;
                 }

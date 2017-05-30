@@ -1,13 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SyncInject", "Inject\SyncInject.csproj", "{1F86B51C-F1CA-4382-93DF-B39C553814F6}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sync2", "Sync\Sync2.csproj", "{460E26F1-0457-433B-9C88-B8ED12008593}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinjEx", "..\..\Projects\VinjEx\VinjEx\VinjEx.csproj", "{FCC2C253-CA39-4352-8C3C-E7AD478B8C60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinjEx", "VinjEx\VinjEx\VinjEx.csproj", "{FCC2C253-CA39-4352-8C3C-E7AD478B8C60}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

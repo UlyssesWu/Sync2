@@ -230,3 +230,6 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /.vs
+/Sync/EasyHook32.dll
+/Sync/EasyHook32Svc.exe
+/Sync/EasyLoad32.dll

@@ -1,6 +1,6 @@
-﻿#Sync2
+﻿# Sync2
 
-###by Ulysses
+### by Ulysses
 
 一个用于将音乐播放器正在播放的曲目同步到QQ状态的小工具。
 
@@ -8,23 +8,25 @@
 
 目前支持 **网易云音乐（PC/UWP）** 及 **千千静听** 。
 
-在QQ 7.5（旧版同步方式）、QQ 7.6-8.6（新版同步方式）测试通过。
+在QQ 7.5（旧版同步方式）、QQ 7.6-8.9（新版同步方式）测试通过。
 
-###需求&库
+### 需求&库
 
 .NET Framework 4 +
 
-[Easyhook](https://easyhook.github.io/)
+[Easyhook](https://easyhook.github.io/) 从NuGet取得
 
-[VinjEx](https://github.com/UlyssesWu/VinjEx)
+[Linq2db](https://github.com/linq2db/linq2db) 从NuGet取得
 
-以及一些可能变动的可从NuGet取得的三方库。
+[Newtonsoft.Json](https://github.com/JamesNK/Newtonsoft.Json) 从NuGet取得
 
-###LICENSE
+[VinjEx](https://github.com/UlyssesWu/VinjEx) 作为子模块取得
+
+### LICENSE
 
 LGPL
 
-###Log
+### Log
 201701：支持网易云音乐UWP
 
 201511：缝缝补补以支持新版QQ接口
