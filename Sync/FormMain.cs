@@ -62,6 +62,10 @@ namespace Sync
             {
                 path = Path.GetDirectoryName(qqProcess[0].MainModule.FileName);
             }
+            else
+            {
+                path = Register.GetQQPath();
+            }
             return path;
         }
 
@@ -308,7 +312,7 @@ namespace Sync
             {
                 Injection();
             }
-        
+
         }
 
         /// <summary>
@@ -505,7 +509,7 @@ namespace Sync
             return QQSolution.PInvoke;
         }
 
-        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        private void FormMain_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (!Program.Direct)
             {
@@ -583,25 +587,25 @@ namespace Sync
         {
             if (NOTIFY && WindowState == FormWindowState.Minimized)
             {
-                //隐藏任务栏区图标 
+                //隐藏任务栏区图标
                 ShowInTaskbar = false;
-                //图标显示在托盘区 
+                //图标显示在托盘区
                 notifyIcon1.Visible = true;
             }
         }
 
         private void notifyIcon1_DoubleClick(object sender, EventArgs e)
         {
-            //判断是否已经最小化于托盘 
+            //判断是否已经最小化于托盘
             if (WindowState == FormWindowState.Minimized)
             {
-                //还原窗体显示 
+                //还原窗体显示
                 WindowState = FormWindowState.Normal;
-                //激活窗体并给予它焦点 
+                //激活窗体并给予它焦点
                 //this.Activate();
-                //任务栏区显示图标 
+                //任务栏区显示图标
                 ShowInTaskbar = true;
-                //托盘区图标隐藏 
+                //托盘区图标隐藏
                 notifyIcon1.Visible = false;
             }
         }
