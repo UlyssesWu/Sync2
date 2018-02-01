@@ -1,5 +1,7 @@
 ﻿# Sync2
 
+[![Build Status](https://ci.appveyor.com/api/projects/status/apiqkde3648ykncb?svg=true)](https://ci.appveyor.com/project/UlyssesWu/sync2)
+
 ### by Ulysses
 
 一个用于将音乐播放器正在播放的曲目同步到QQ状态的小工具。
