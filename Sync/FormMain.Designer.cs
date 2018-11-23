@@ -198,9 +198,8 @@ namespace Sync
             this.cbo_solution.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cbo_solution.FormattingEnabled = true;
             this.cbo_solution.Items.AddRange(new object[] {
-            "3.COM调用（7.5之前或9.0之后的版本都选这个）",
-            "2.强制转码（部分汉字会乱码，不推荐）",
-            "1.QQ 7.5-8.x: DLL调用（需要QQ路径和管理员权限）"});
+            "1.DLL调用（需要QQ路径和管理员权限）",
+            "3.COM调用（7.5之后版本可能会乱码）"});
             this.cbo_solution.Location = new System.Drawing.Point(92, 112);
             this.cbo_solution.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbo_solution.Name = "cbo_solution";

@@ -233,3 +233,6 @@ $RECYCLE.BIN/
 /Sync/EasyHook32.dll
 /Sync/EasyHook32Svc.exe
 /Sync/EasyLoad32.dll
+/.tools
+/MigrationBackup
+/DLL

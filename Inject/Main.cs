@@ -8,13 +8,15 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading;
 using System.Reflection;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using VinjEx;
 
 namespace Injection
 {
     public enum QQSolution
     {
-        OldVersion = 3,
+        ComCall = 3,
         ForceEncoding = 2,
         PInvoke = 1
     }
@@ -27,12 +29,13 @@ namespace Injection
         Close = 8,
         SetAppType = 16,
         SetEncoding = 32,
-        SetQQPath = 64
+        SetQQPath = 64,
+        NotifyTitle = 128
     }
     public enum AppType
     {
         NetEaseCloud = 1, TTPlayer = 2, BaiduMusic = 3,
-        NetEaseUwp = 4,
+        NetEaseUwp = 4, Foobar2000 = 5,
     }
     public class Main : Injectable
     {
@@ -47,12 +50,13 @@ namespace Injection
         private static string _processName = "";
         private static bool _usePInvoke = true;
         private static bool _useForceEncoding = false;
+        private static Regex _squareRegex = new Regex(@"\[.*?\]");
+        public static Main Instance;
 
         public Main(RemoteHooking.IContext inContext, String inChannelName) : base(inContext, inChannelName)
         {
-
         }
-        
+
         public static AppType GetAppType()
         {
             if (_processName.StartsWith("cloudmusic"))
@@ -66,6 +70,10 @@ namespace Injection
             if (_processName.StartsWith("baidumusic"))
             {
                 return AppType.BaiduMusic;
+            }
+            if (_processName.StartsWith("foobar2000"))
+            {
+                return AppType.Foobar2000;
             }
             return AppType.NetEaseUwp;
         }
@@ -103,7 +111,7 @@ namespace Injection
                     }
                     var objAdminType = Type.GetTypeFromProgID("QQCPHelper.CPAdder");
                     var args = new object[4];
-                    args[0] = qqNum;
+                    args[0] = p;
                     args[1] = RSID_QQ_MUSIC;
                     args[2] = content;
                     if (_useForceEncoding)
@@ -190,6 +198,18 @@ namespace Injection
                         }
                     }
                     #endregion
+                    #region Foobar2000
+                    if (GetAppType() == AppType.Foobar2000)
+                    {
+                        if (!lpString.Trim().StartsWith("foobar2000")
+                            && lpString.Contains("-") && lpString != _lastText)
+                        {
+                            NowPlaying = _squareRegex.Replace(lpString, "").Trim();
+                            //Instance?.SendResponse($"{Command.NotifyTitle}|{_qq}|{NowPlaying}");
+                            Send2QQ(_qq, NowPlaying);
+                        }
+                    }
+                    #endregion
                     _lastText = lpString.Trim();
                 }
                 catch (Exception ex)
@@ -220,7 +240,7 @@ namespace Injection
             {
                 return;
             }
-            string[] cmds = cmd.Split(new[] {'|'}, StringSplitOptions.None);
+            string[] cmds = cmd.Split(new[] { '|' }, StringSplitOptions.None);
             if (cmds.Length > 1)
             {
                 _qq = cmds[0];
@@ -246,7 +266,7 @@ namespace Injection
                 }
                 if (cmds[2].ParseEnum<Command>() == Command.Close)
                 {
-                    Send2QQ(_qq,"");
+                    Send2QQ(_qq, "");
                     base.Exit(null, null);
                     return;
                 }
@@ -268,7 +288,7 @@ namespace Injection
                     {
                         switch (cmds[3].ParseEnum<QQSolution>())
                         {
-                            case QQSolution.OldVersion:
+                            case QQSolution.ComCall:
                                 _useForceEncoding = false;
                                 _usePInvoke = false;
                                 break;
@@ -295,6 +315,7 @@ namespace Injection
 
         public override void OnLoad()
         {
+            Instance = this;
             Thread th = new Thread(Entry);
             th.Start();
             SetWindowTextHook = LocalHook.Create(LocalHook.GetProcAddress("user32.dll", "SetWindowTextW"), new DSetWindowText(SetWindowText_Hooked), this);
@@ -319,7 +340,8 @@ namespace Injection
 
         public static void EntryPoint()
         {
-            MessageBox.Show(string.IsNullOrWhiteSpace(NowPlaying)?"好像还没有检测到歌曲名字呢。\n请先切歌或者切换播放状态试试":NowPlaying, "Sync2", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
+            Send2QQ(_qq, NowPlaying);
+            MessageBox.Show(string.IsNullOrWhiteSpace(NowPlaying) ? "好像还没有检测到歌曲名字呢。\n请先切歌或者切换播放状态试试" : NowPlaying, "Sync2", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
         }
     }
 }

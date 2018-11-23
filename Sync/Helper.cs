@@ -48,7 +48,7 @@ namespace Sync
                     }
                     var objAdminType = Type.GetTypeFromProgID("QQCPHelper.CPAdder");
                     var args = new object[4];
-                    args[0] = qqNum;
+                    args[0] = p;
                     args[1] = RSID_QQ_MUSIC;
                     args[2] = content;
                     if (useForceEncoding)
@@ -78,7 +78,7 @@ namespace Sync
             }
             catch (Exception)
             {
-                return (T)Enum.GetValues(typeof (T)).GetValue(0);
+                return (T)Enum.GetValues(typeof(T)).GetValue(0);
             }
         }
     }

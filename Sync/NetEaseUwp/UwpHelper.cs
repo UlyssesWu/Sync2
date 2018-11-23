@@ -48,6 +48,11 @@ namespace Sync.NetEaseUwp
             catch (UnauthorizedAccessException ex)
             {
                 // ok, so we are not allowed to dig into that directory. Move on.
-            }}
+            }
+            catch (PathTooLongException ex2)
+            {
+                // WTF is this
+            }
+        }
     }
 }

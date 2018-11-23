@@ -14,12 +14,11 @@ namespace Sync
     public enum AppType
     {
         网易云音乐 = 1, 千千静听 = 2, 百度音乐 = 3,
-        网易云音乐UWP = 4,
+        网易云音乐UWP = 4, Foobar2000 = 5,
     }
     public enum QQSolution
     {
         ComCall = 3,
-        ForceEncoding = 2,
         PInvoke = 1
     }
     public enum Command
@@ -30,7 +29,8 @@ namespace Sync
         Close = 8,
         SetAppType = 16,
         SetEncoding = 32,
-        SetQQPath = 64
+        SetQQPath = 64,
+        NotifyTitle = 128
     }
 
     public partial class FormMain : Form
@@ -49,6 +49,7 @@ namespace Sync
         private string _qqPath;
         private AppType _currentAppType = AppType.网易云音乐;
         private NetEaseUwpWatcher _uwpWatcher;
+        private static bool _usePInvoke = false;
 
         /// <summary>
         /// 通过进程寻找QQ路径（需要QQ已打开）
@@ -128,6 +129,7 @@ namespace Sync
                 {AppType.网易云音乐, "cloudmusic" },
                 {AppType.千千静听, "TTPlayer" },
                 {AppType.网易云音乐UWP, "NeteaseMusic" },
+                //{AppType.Foobar2000, "foobar2000" },
             };
         }
 
@@ -147,7 +149,16 @@ namespace Sync
             }
             if (!string.IsNullOrWhiteSpace(Settings.Default.Encoding))
             {
-                cbo_solution.SelectedIndex = (int)Settings.Default.Encoding.ParseEnum<QQSolution>() - 1;
+                switch (Settings.Default.Encoding.ParseEnum<QQSolution>())
+                {
+                    case QQSolution.ComCall:
+                        cbo_solution.SelectedIndex = 1;
+                        break;
+                    default:
+                    case QQSolution.PInvoke:
+                        cbo_solution.SelectedIndex = 0;
+                        break;
+                }
             }
             else
             {
@@ -164,7 +175,7 @@ namespace Sync
             if (Program.Direct)
             {
                 string path = "";
-                int waittime = 3;
+                int waitTime = 3;
                 Hide();
                 ShowInTaskbar = false;//必须有
 
@@ -195,13 +206,13 @@ namespace Sync
                         }
                         if (lines.Count > 3)
                         {
-                            if (!Int32.TryParse(lines[3], out waittime))
+                            if (!Int32.TryParse(lines[3], out waitTime))
                             {
-                                waittime = 2;
+                                waitTime = 2;
                             }
                             else
                             {
-                                waittime = Math.Max(1, waittime);
+                                waitTime = Math.Max(1, waitTime);
                             }
                         }
                         if (lines.Count > 4 && !string.IsNullOrWhiteSpace(lines[4]))
@@ -236,7 +247,7 @@ namespace Sync
                         _remoteProcess.EnableRaisingEvents = true;
                         _remoteProcess.Exited += (o, args) => { Application.Exit(); };
 
-                        Thread.Sleep(waittime * 1000);
+                        Thread.Sleep(waitTime * 1000);
                     }
                     catch (Exception)
                     {
@@ -267,10 +278,10 @@ namespace Sync
                 return;
             }
 
-            bool usePInvoke = false;
+            _usePInvoke = false;
             if (GetSolution(cbo_solution.Text) == QQSolution.PInvoke)
             {
-                usePInvoke = true;
+                _usePInvoke = true;
                 if (string.IsNullOrWhiteSpace(_qqPath) || !VerifyPath(_qqPath))
                 {
                     if (!AskForQQPath())
@@ -287,7 +298,14 @@ namespace Sync
                 var dllPath = Path.Combine(_qqPath, PINVOKE_DLL);
                 if (!File.Exists(dllPath))
                 {
-                    File.Copy(PINVOKE_DLL, dllPath, true);
+                    try
+                    {
+                        File.Copy(PINVOKE_DLL, dllPath, true);
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show("复制DLL失败，请以管理员权限运行，或手动将UPHelper.dll复制到QQ\\Bin目录下。");
+                    }
                 }
                 Directory.SetCurrentDirectory(_qqPath);
                 Helper.SetDllDirectory(_qqPath);
@@ -302,8 +320,8 @@ namespace Sync
                 _uwpWatcher = new NetEaseUwpWatcher()
                 {
                     QQ = txt_qq.Text,
-                    UsePInvoke = usePInvoke,
-                    UseForceEncoding = GetSolution(cbo_solution.Text) == QQSolution.ForceEncoding
+                    UsePInvoke = _usePInvoke,
+                    UseForceEncoding = false
                 };
                 _uwpWatcher.Start();
                 rtxt_display.Text = "已开始监视播放器";
@@ -355,6 +373,7 @@ namespace Sync
             }
 
             _ip = InjectableProcess.Create(handle);
+            _ip.OnClientResponse += HandleResponse;
             _ip.SleepInterval = 10000;
             Thread.Sleep(200);//FIXED:Wait for injection complete
 
@@ -380,8 +399,23 @@ namespace Sync
 
             SendCommand(Command.SetAppType, cbo_process.SelectedValue.ToString());
 
-            SendEncoding(Settings.Default.Encoding.ParseEnum<QQSolution>());
+            SendEncoding(GetSolution(cbo_solution.Text));
 
+        }
+
+        private static void HandleResponse(object command)
+        {
+            if (command is string reply)
+            {
+                string[] cmds = reply.Split(new[] { '|' }, StringSplitOptions.None);
+                if (cmds.Length >= 3)
+                {
+                    if (cmds[0].ParseEnum<Command>() == Command.NotifyTitle)
+                    {
+                        Helper.Send2QQ(cmds[1], cmds[2], false);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -498,10 +532,6 @@ namespace Sync
 
         private QQSolution GetSolution(string text)
         {
-            if (text[0] == '2')
-            {
-                return QQSolution.ForceEncoding;
-            }
             if (text[0] == '3')
             {
                 return QQSolution.ComCall;
@@ -565,7 +595,7 @@ namespace Sync
                 {
                     QQ = txt_qq.Text,
                     UsePInvoke = GetSolution(cbo_solution.Text) == QQSolution.PInvoke,
-                    UseForceEncoding = GetSolution(cbo_solution.Text) == QQSolution.ForceEncoding
+                    UseForceEncoding = false
                 };
                 _uwpWatcher.Start();
                 rtxt_display.Text = "已更新监视状态";
