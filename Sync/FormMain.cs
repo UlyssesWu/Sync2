@@ -129,7 +129,9 @@ namespace Sync
                 {AppType.网易云音乐, "cloudmusic" },
                 {AppType.千千静听, "TTPlayer" },
                 {AppType.网易云音乐UWP, "NeteaseMusic" },
-                //{AppType.Foobar2000, "foobar2000" },
+#if DEBUG
+                {AppType.Foobar2000, "foobar2000" },
+#endif
             };
         }
 

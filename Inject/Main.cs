@@ -340,7 +340,7 @@ namespace Injection
 
         public static void EntryPoint()
         {
-            Send2QQ(_qq, NowPlaying);
+            //Send2QQ(_qq, NowPlaying);
             MessageBox.Show(string.IsNullOrWhiteSpace(NowPlaying) ? "好像还没有检测到歌曲名字呢。\n请先切歌或者切换播放状态试试" : NowPlaying, "Sync2", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
         }
     }
