@@ -18,7 +18,7 @@ namespace Sync
     }
     public enum QQSolution
     {
-        OldVersion = 3,
+        ComCall = 3,
         ForceEncoding = 2,
         PInvoke = 1
     }
@@ -504,7 +504,7 @@ namespace Sync
             }
             if (text[0] == '3')
             {
-                return QQSolution.OldVersion;
+                return QQSolution.ComCall;
             }
             return QQSolution.PInvoke;
         }

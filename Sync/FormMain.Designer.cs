@@ -73,7 +73,7 @@ namespace Sync
             // btn_unhook
             // 
             this.btn_unhook.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_unhook.Location = new System.Drawing.Point(212, 318);
+            this.btn_unhook.Location = new System.Drawing.Point(227, 318);
             this.btn_unhook.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btn_unhook.Name = "btn_unhook";
             this.btn_unhook.Size = new System.Drawing.Size(169, 47);
@@ -92,7 +92,7 @@ namespace Sync
             this.txt_qq.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txt_qq.MaxLength = 50;
             this.txt_qq.Name = "txt_qq";
-            this.txt_qq.Size = new System.Drawing.Size(289, 34);
+            this.txt_qq.Size = new System.Drawing.Size(304, 39);
             this.txt_qq.TabIndex = 5;
             this.txt_qq.Text = "2094966351";
             // 
@@ -101,7 +101,7 @@ namespace Sync
             this.rtxt_display.AutoSize = true;
             this.rtxt_display.Location = new System.Drawing.Point(16, 159);
             this.rtxt_display.Name = "rtxt_display";
-            this.rtxt_display.Size = new System.Drawing.Size(274, 91);
+            this.rtxt_display.Size = new System.Drawing.Size(326, 107);
             this.rtxt_display.TabIndex = 7;
             this.rtxt_display.Text = "打开对应的音乐软件，输入你已登录的QQ号\r\n然后点击开始同步\r\n如果成功检测到程序却不能同步，\r\n请结束所有播放器进程并重启本程序再试\r\nby Ulysses :" +
     " wdwxy12345@gmail.com\r\n";
@@ -110,7 +110,7 @@ namespace Sync
             // btn_now
             // 
             this.btn_now.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_now.Location = new System.Drawing.Point(212, 263);
+            this.btn_now.Location = new System.Drawing.Point(227, 263);
             this.btn_now.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btn_now.Name = "btn_now";
             this.btn_now.Size = new System.Drawing.Size(169, 47);
@@ -138,16 +138,16 @@ namespace Sync
             this.lbl_name.AutoSize = true;
             this.lbl_name.Location = new System.Drawing.Point(12, 16);
             this.lbl_name.Name = "lbl_name";
-            this.lbl_name.Size = new System.Drawing.Size(74, 19);
+            this.lbl_name.Size = new System.Drawing.Size(58, 21);
             this.lbl_name.TabIndex = 11;
-            this.lbl_name.Text = "播放器选择";
+            this.lbl_name.Text = "播放器";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(12, 68);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(44, 19);
+            this.label2.Size = new System.Drawing.Size(52, 21);
             this.label2.TabIndex = 12;
             this.label2.Text = "QQ号";
             // 
@@ -166,27 +166,27 @@ namespace Sync
             this.tool_current,
             this.tool_exit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(132, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 76);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // tool_txt_qq
             // 
             this.tool_txt_qq.Name = "tool_txt_qq";
-            this.tool_txt_qq.Size = new System.Drawing.Size(131, 24);
+            this.tool_txt_qq.Size = new System.Drawing.Size(138, 24);
             this.tool_txt_qq.Text = "QQ号";
             this.tool_txt_qq.Click += new System.EventHandler(this.tool_txt_qq_Click);
             // 
             // tool_current
             // 
             this.tool_current.Name = "tool_current";
-            this.tool_current.Size = new System.Drawing.Size(131, 24);
+            this.tool_current.Size = new System.Drawing.Size(138, 24);
             this.tool_current.Text = "当前曲目";
             this.tool_current.Click += new System.EventHandler(this.tool_current_Click);
             // 
             // tool_exit
             // 
             this.tool_exit.Name = "tool_exit";
-            this.tool_exit.Size = new System.Drawing.Size(131, 24);
+            this.tool_exit.Size = new System.Drawing.Size(138, 24);
             this.tool_exit.Text = "退出";
             this.tool_exit.Click += new System.EventHandler(this.tool_exit_Click);
             // 
@@ -198,13 +198,13 @@ namespace Sync
             this.cbo_solution.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cbo_solution.FormattingEnabled = true;
             this.cbo_solution.Items.AddRange(new object[] {
-            "1.新版QQ:DLL调用（需要QQ路径，推荐）",
-            "2.新版QQ:强制转码（部分汉字会乱码，不推荐）",
-            "3.旧版QQ:COM调用（7.5及以前）"});
+            "3.COM调用（7.5之前或9.0之后的版本都选这个）",
+            "2.强制转码（部分汉字会乱码，不推荐）",
+            "1.QQ 7.5-8.x: DLL调用（需要QQ路径和管理员权限）"});
             this.cbo_solution.Location = new System.Drawing.Point(92, 112);
             this.cbo_solution.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbo_solution.Name = "cbo_solution";
-            this.cbo_solution.Size = new System.Drawing.Size(289, 27);
+            this.cbo_solution.Size = new System.Drawing.Size(304, 28);
             this.cbo_solution.TabIndex = 10;
             this.toolTip1.SetToolTip(this.cbo_solution, "由于QQ的接口变动因而需要选择");
             // 
@@ -213,24 +213,26 @@ namespace Sync
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 116);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(61, 19);
+            this.label1.Size = new System.Drawing.Size(74, 21);
             this.label1.TabIndex = 11;
             this.label1.Text = "同步策略";
             // 
             // cbo_process
             // 
+            this.cbo_process.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cbo_process.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbo_process.FormattingEnabled = true;
             this.cbo_process.Location = new System.Drawing.Point(92, 13);
             this.cbo_process.Name = "cbo_process";
-            this.cbo_process.Size = new System.Drawing.Size(289, 27);
+            this.cbo_process.Size = new System.Drawing.Size(304, 28);
             this.cbo_process.TabIndex = 13;
             // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 19F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(393, 378);
+            this.ClientSize = new System.Drawing.Size(408, 378);
             this.Controls.Add(this.cbo_process);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
