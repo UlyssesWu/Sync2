@@ -99,14 +99,14 @@ namespace Injection
         /// <param name="content">内容</param>
         public static void Send2QQ(string qqNum, string content)
         {
-            int p;
+            uint p;
             try
             {
-                if (int.TryParse(qqNum, out p))
+                if (uint.TryParse(qqNum, out p))
                 {
                     if (_usePInvoke)
                     {
-                        CPHelper.PutRSInfo((uint)p, RSID_QQ_MUSIC, content, "");
+                        CPHelper.PutRSInfo(p, RSID_QQ_MUSIC, content, "");
                         return;
                     }
                     var objAdminType = Type.GetTypeFromProgID("QQCPHelper.CPAdder");

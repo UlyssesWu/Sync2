@@ -272,9 +272,9 @@ namespace Sync
 
         private void btnHook_Click(object sender, EventArgs e)
         {
-            int qqNum;
+            uint qqNum;
 
-            if (!Int32.TryParse(txt_qq.Text, out qqNum))
+            if (!uint.TryParse(txt_qq.Text, out qqNum))
             {
                 rtxt_display.Text = "QQ号码格式不正确";
                 return;
