@@ -6,12 +6,12 @@ using System.Runtime.InteropServices;
 // 特性集控制。更改这些特性值可修改
 // 与程序集关联的信息。
 [assembly: AssemblyTitle("Sync2QQ")]
-[assembly: AssemblyDescription("Injection Lib for Sync2.")]
+[assembly: AssemblyDescription("Injection module for Sync2.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Ulysses")]
 [assembly: AssemblyProduct("Sync2")]
-[assembly: AssemblyCopyright("Copyright © Ulysses 2015-2018")]
-[assembly: AssemblyTrademark("Ulysses")]
+[assembly: AssemblyCopyright("Copyright © Ulysses 2015-2022")]
+[assembly: AssemblyTrademark("wdwxy12345@gmail.com")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 使此程序集中的类型
@@ -33,4 +33,4 @@ using System.Runtime.InteropServices;
 // 方法是按如下所示使用“*”: 
 // [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("2.0.2.0")]
-[assembly: AssemblyFileVersion("2.0.2.0")]
+[assembly: AssemblyFileVersion("2.1.0.0")]

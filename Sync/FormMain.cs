@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Sync.NetEaseUwp;
 using Sync.Properties;
@@ -30,7 +31,8 @@ namespace Sync
         SetAppType = 16,
         SetEncoding = 32,
         SetQQPath = 64,
-        NotifyTitle = 128
+        NotifyTitle = 128,
+        NotifyInjected = 256,
     }
 
     public partial class FormMain : Form
@@ -50,6 +52,7 @@ namespace Sync
         private AppType _currentAppType = AppType.网易云音乐;
         private NetEaseUwpWatcher _uwpWatcher;
         private static bool _usePInvoke = false;
+        //private CancellationTokenSource _notifyIconTokenSource = new CancellationTokenSource();
 
         /// <summary>
         /// 通过进程寻找QQ路径（需要QQ已打开）
@@ -129,13 +132,11 @@ namespace Sync
                 {AppType.网易云音乐, "cloudmusic" },
                 {AppType.千千静听, "TTPlayer" },
                 {AppType.网易云音乐UWP, "NeteaseMusic" },
-#if DEBUG
                 {AppType.Foobar2000, "foobar2000" },
-#endif
             };
         }
 
-        private void FormMain_Load(object sender, EventArgs e)
+        private async void FormMain_Load(object sender, EventArgs e)
         {
             cbo_process.DisplayMember = "Key";
             cbo_process.ValueMember = "Value";
@@ -249,7 +250,7 @@ namespace Sync
                         _remoteProcess.EnableRaisingEvents = true;
                         _remoteProcess.Exited += (o, args) => { Application.Exit(); };
 
-                        Thread.Sleep(waitTime * 1000);
+                        await Task.Delay(waitTime * 1000).ConfigureAwait(true);
                     }
                     catch (Exception)
                     {
@@ -259,22 +260,26 @@ namespace Sync
                 }
                 finally
                 {
-                    int count = 10;
+                    int count = 3;
                     btnHook_Click(null, null);
+                    await Task.Delay(2000).ConfigureAwait(true);
                     while (_injectResult == 0 && count > 0)
                     {
                         btnHook_Click(null, null);
+                        await Task.Delay(2000).ConfigureAwait(true);
                         count--;
                     }
+
+                    SendCommand(Command.SetQQPath, _qqPath);
+                    SendCommand(Command.SetAppType, cbo_process.SelectedValue.ToString());
+                    SendEncoding(GetSolution(cbo_solution.Text));
                 }
             }
         }
 
         private void btnHook_Click(object sender, EventArgs e)
         {
-            uint qqNum;
-
-            if (!uint.TryParse(txt_qq.Text, out qqNum))
+            if (!uint.TryParse(txt_qq.Text, out _))
             {
                 rtxt_display.Text = "QQ号码格式不正确";
                 return;
@@ -338,7 +343,7 @@ namespace Sync
         /// <summary>
         /// 注入进程
         /// </summary>
-        public void Injection()
+        public async void Injection()
         {
             string targetProcess = cbo_process.SelectedValue.ToString();
             if (Process.GetProcessesByName(targetProcess).Length <= 0)
@@ -377,12 +382,13 @@ namespace Sync
             _ip = InjectableProcess.Create(handle);
             _ip.OnClientResponse += HandleResponse;
             _ip.SleepInterval = 10000;
-            Thread.Sleep(200);//FIXED:Wait for injection complete
+            await Task.Delay(300).ConfigureAwait(true);
+            //Thread.Sleep(200);//FIXED:Wait for injection complete
 
             if (Program.Direct)
             {
                 //_ip.IsBackgroundThread = false;
-                _ip.OnClientExit += (sender, args) => Application.Exit();
+                _ip.OnClientExit += ClientExit;
             }
 
             //_injectResult = _ip.Inject(Path.Combine(Application.StartupPath, SYNC_DLL), Path.Combine(Application.StartupPath, SYNC_DLL));
@@ -398,23 +404,35 @@ namespace Sync
             SyncEnabled = true;
 
             SendCommand(Command.SetQQPath, _qqPath);
-
             SendCommand(Command.SetAppType, cbo_process.SelectedValue.ToString());
-
             SendEncoding(GetSolution(cbo_solution.Text));
 
         }
 
-        private static void HandleResponse(object command)
+        public void ClientExit(object sender, EventArgs args)
+        {
+            Application.Exit();
+        }
+
+        public void HandleResponse(object command) //Must be public non-static method
         {
             if (command is string reply)
             {
                 string[] cmds = reply.Split(new[] { '|' }, StringSplitOptions.None);
-                if (cmds.Length >= 3)
+                if (cmds.Length > 0)
                 {
-                    if (cmds[0].ParseEnum<Command>() == Command.NotifyTitle)
+                    var cmd = cmds[0].ParseEnum<Command>();
+                    switch (cmd)
                     {
-                        Helper.Send2QQ(cmds[1], cmds[2], false);
+                        case Command.NotifyInjected when cmds.Length > 1:
+                            notifyIcon1.Visible = true;
+                            notifyIcon1.BalloonTipText = $"已连接到播放器 {cmds[1]}";
+                            notifyIcon1.BalloonTipIcon = ToolTipIcon.None;
+                            notifyIcon1.ShowBalloonTip(2000);
+                            break;
+                        case Command.NotifyTitle when cmds.Length >= 3:
+                            Helper.Send2QQ(cmds[1], cmds[2], false);
+                            break;
                     }
                 }
             }
@@ -493,6 +511,8 @@ namespace Sync
         /// <param name="e"></param>
         private void GetNowPlaying(object sender, EventArgs e)
         {
+            //Helper.Send2QQ(txt_qq.Text, "Test - Test");
+            //return;
             if (_currentAppType == AppType.网易云音乐UWP)
             {
                 //MessageBox.Show(string.IsNullOrWhiteSpace(_uwpWatcher?.CurrentSong) ? "好像没有检测到歌曲名字呢。\n请确认当前是否已成功启用同步" : _uwpWatcher?.CurrentSong, "Sync2", MessageBoxButtons.OK, MessageBoxIcon.None, MessageBoxDefaultButton.Button1, MessageBoxOptions.ServiceNotification);
@@ -513,6 +533,7 @@ namespace Sync
 
         private void btnUnhook_Click(object sender, EventArgs e)
         {
+            notifyIcon1.Visible = false;
             SyncEnabled = false;
             _uwpWatcher?.Pause();
             if (_currentAppType == AppType.网易云音乐UWP)
@@ -638,7 +659,7 @@ namespace Sync
                 //任务栏区显示图标
                 ShowInTaskbar = true;
                 //托盘区图标隐藏
-                notifyIcon1.Visible = false;
+                //notifyIcon1.Visible = false;
             }
         }
 
@@ -667,6 +688,12 @@ namespace Sync
         private void SendEncoding(QQSolution solution)
         {
             SendCommand(Command.SetEncoding, solution.ToString());
+        }
+
+        private void btn_now_Click(object sender, EventArgs e)
+        {
+            //notifyIcon1.Visible = false;
+            GetNowPlaying(sender, e);
         }
     }
 }

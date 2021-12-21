@@ -30,8 +30,10 @@ namespace Injection
         SetAppType = 16,
         SetEncoding = 32,
         SetQQPath = 64,
-        NotifyTitle = 128
+        NotifyTitle = 128,
+        NotifyInjected = 256,
     }
+
     public enum AppType
     {
         NetEaseCloud = 1, TTPlayer = 2, BaiduMusic = 3,
@@ -50,7 +52,6 @@ namespace Injection
         private static string _processName = "";
         private static bool _usePInvoke = true;
         private static bool _useForceEncoding = false;
-        private static Regex _squareRegex = new Regex(@"\[.*?\]");
         public static Main Instance;
 
         public Main(RemoteHooking.IContext inContext, String inChannelName) : base(inContext, inChannelName)
@@ -76,6 +77,25 @@ namespace Injection
                 return AppType.Foobar2000;
             }
             return AppType.NetEaseUwp;
+        }
+
+        public static string GetAppName()
+        {
+            switch (GetAppType())
+            {
+                case AppType.NetEaseCloud:
+                    return "网易云音乐";
+                case AppType.TTPlayer:
+                    return "千千静听";
+                case AppType.BaiduMusic:
+                    return "千千静听（百度）";
+                case AppType.NetEaseUwp:
+                    return "网易云音乐（UWP）";
+                case AppType.Foobar2000:
+                    return "foobar2000";
+                default:
+                    return "";
+            }
         }
 
         public static object ForceChangeEncoding(string text)
@@ -201,10 +221,9 @@ namespace Injection
                     #region Foobar2000
                     if (GetAppType() == AppType.Foobar2000)
                     {
-                        if (!lpString.Trim().StartsWith("foobar2000")
-                            && lpString.Contains("-") && lpString != _lastText)
+                        if (lpString.EndsWith(" [foobar2000]"))
                         {
-                            NowPlaying = _squareRegex.Replace(lpString, "").Trim();
+                            NowPlaying = lpString.Substring(0, lpString.LastIndexOf(" [foobar2000]", StringComparison.Ordinal)).Trim();
                             //Instance?.SendResponse($"{Command.NotifyTitle}|{_qq}|{NowPlaying}");
                             Send2QQ(_qq, NowPlaying);
                         }
@@ -333,9 +352,11 @@ namespace Injection
             //Sema = false;
         }
 
-        public void Entry()
+        public async void Entry()
         {
-            MessageBox.Show("成功检测到程序"); //MARK:不要带标题 会被误认为歌名- -
+            await Task.Delay(600).ConfigureAwait(true);
+            Instance.SendResponse($"{Command.NotifyInjected}|{GetAppName()}");
+            //MessageBox.Show("成功检测到程序"); //MARK:不要带标题 会被误认为歌名- -
         }
 
         public static void EntryPoint()

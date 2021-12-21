@@ -60,10 +60,10 @@ namespace Sync
             // btn_hook
             // 
             this.btn_hook.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_hook.Location = new System.Drawing.Point(8, 318);
+            this.btn_hook.Location = new System.Drawing.Point(8, 399);
             this.btn_hook.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btn_hook.Name = "btn_hook";
-            this.btn_hook.Size = new System.Drawing.Size(169, 47);
+            this.btn_hook.Size = new System.Drawing.Size(200, 47);
             this.btn_hook.TabIndex = 0;
             this.btn_hook.Text = "开始同步";
             this.toolTip1.SetToolTip(this.btn_hook, "任何时候同步不灵了就点一下试试");
@@ -73,10 +73,10 @@ namespace Sync
             // btn_unhook
             // 
             this.btn_unhook.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_unhook.Location = new System.Drawing.Point(227, 318);
+            this.btn_unhook.Location = new System.Drawing.Point(366, 399);
             this.btn_unhook.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btn_unhook.Name = "btn_unhook";
-            this.btn_unhook.Size = new System.Drawing.Size(169, 47);
+            this.btn_unhook.Size = new System.Drawing.Size(200, 47);
             this.btn_unhook.TabIndex = 4;
             this.btn_unhook.Text = "结束同步";
             this.toolTip1.SetToolTip(this.btn_unhook, "结束同步");
@@ -88,47 +88,48 @@ namespace Sync
             this.txt_qq.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txt_qq.Font = new System.Drawing.Font("微软雅黑", 14.26415F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.txt_qq.Location = new System.Drawing.Point(92, 59);
+            this.txt_qq.Location = new System.Drawing.Point(106, 106);
             this.txt_qq.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.txt_qq.MaxLength = 50;
             this.txt_qq.Name = "txt_qq";
-            this.txt_qq.Size = new System.Drawing.Size(304, 39);
+            this.txt_qq.Size = new System.Drawing.Size(460, 45);
             this.txt_qq.TabIndex = 5;
-            this.txt_qq.Text = "2094966351";
+            this.txt_qq.Text = "3575518082";
             // 
             // rtxt_display
             // 
             this.rtxt_display.AutoSize = true;
+            this.rtxt_display.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.rtxt_display.Location = new System.Drawing.Point(16, 159);
             this.rtxt_display.Name = "rtxt_display";
-            this.rtxt_display.Size = new System.Drawing.Size(326, 107);
+            this.rtxt_display.Size = new System.Drawing.Size(491, 138);
             this.rtxt_display.TabIndex = 7;
-            this.rtxt_display.Text = "打开对应的音乐软件，输入你已登录的QQ号\r\n然后点击开始同步\r\n如果成功检测到程序却不能同步，\r\n请结束所有播放器进程并重启本程序再试\r\nby Ulysses :" +
-    " wdwxy12345@gmail.com\r\n";
+            this.rtxt_display.Text = "打开对应的音乐软件，输入你已登录的QQ号\r\n然后点击开始同步，播放器显示弹框后切换一首歌曲\r\n如果成功检测到程序却不能同步，\r\n请结束所有播放器进程并重启本程序再" +
+    "试\r\nby Ulysses : wdwxy12345@gmail.com\r\n";
             this.rtxt_display.UseCompatibleTextRendering = true;
             // 
             // btn_now
             // 
             this.btn_now.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btn_now.Location = new System.Drawing.Point(227, 263);
+            this.btn_now.Location = new System.Drawing.Point(366, 344);
             this.btn_now.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btn_now.Name = "btn_now";
-            this.btn_now.Size = new System.Drawing.Size(169, 47);
+            this.btn_now.Size = new System.Drawing.Size(200, 47);
             this.btn_now.TabIndex = 8;
             this.btn_now.Text = "显示当前曲目";
             this.toolTip1.SetToolTip(this.btn_now, "只有正常同步状态下才能显示\r\n跟ping的作用一样");
             this.btn_now.UseVisualStyleBackColor = true;
-            this.btn_now.Click += new System.EventHandler(this.GetNowPlaying);
+            this.btn_now.Click += new System.EventHandler(this.btn_now_Click);
             // 
             // btn_change
             // 
             this.btn_change.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.btn_change.Location = new System.Drawing.Point(8, 263);
+            this.btn_change.Location = new System.Drawing.Point(8, 344);
             this.btn_change.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.btn_change.Name = "btn_change";
-            this.btn_change.Size = new System.Drawing.Size(169, 47);
+            this.btn_change.Size = new System.Drawing.Size(200, 47);
             this.btn_change.TabIndex = 9;
-            this.btn_change.Text = "更改QQ号/同步状态";
+            this.btn_change.Text = "更改QQ号/同步设置";
             this.toolTip1.SetToolTip(this.btn_change, "（开始同步后才有效）\r\n当修改了QQ号或是策略之后请点击");
             this.btn_change.UseVisualStyleBackColor = true;
             this.btn_change.Click += new System.EventHandler(this.btn_change_Click);
@@ -136,18 +137,20 @@ namespace Sync
             // lbl_name
             // 
             this.lbl_name.AutoSize = true;
-            this.lbl_name.Location = new System.Drawing.Point(12, 16);
+            this.lbl_name.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.lbl_name.Location = new System.Drawing.Point(20, 19);
             this.lbl_name.Name = "lbl_name";
-            this.lbl_name.Size = new System.Drawing.Size(58, 21);
+            this.lbl_name.Size = new System.Drawing.Size(72, 27);
             this.lbl_name.TabIndex = 11;
             this.lbl_name.Text = "播放器";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(12, 68);
+            this.label2.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label2.Location = new System.Drawing.Point(24, 115);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(52, 21);
+            this.label2.Size = new System.Drawing.Size(64, 27);
             this.label2.TabIndex = 12;
             this.label2.Text = "QQ号";
             // 
@@ -166,27 +169,27 @@ namespace Sync
             this.tool_current,
             this.tool_exit});
             this.contextMenuStrip1.Name = "contextMenuStrip1";
-            this.contextMenuStrip1.Size = new System.Drawing.Size(139, 76);
+            this.contextMenuStrip1.Size = new System.Drawing.Size(161, 100);
             this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
             // 
             // tool_txt_qq
             // 
             this.tool_txt_qq.Name = "tool_txt_qq";
-            this.tool_txt_qq.Size = new System.Drawing.Size(138, 24);
+            this.tool_txt_qq.Size = new System.Drawing.Size(160, 32);
             this.tool_txt_qq.Text = "QQ号";
             this.tool_txt_qq.Click += new System.EventHandler(this.tool_txt_qq_Click);
             // 
             // tool_current
             // 
             this.tool_current.Name = "tool_current";
-            this.tool_current.Size = new System.Drawing.Size(138, 24);
+            this.tool_current.Size = new System.Drawing.Size(160, 32);
             this.tool_current.Text = "当前曲目";
             this.tool_current.Click += new System.EventHandler(this.tool_current_Click);
             // 
             // tool_exit
             // 
             this.tool_exit.Name = "tool_exit";
-            this.tool_exit.Size = new System.Drawing.Size(138, 24);
+            this.tool_exit.Size = new System.Drawing.Size(160, 32);
             this.tool_exit.Text = "退出";
             this.tool_exit.Click += new System.EventHandler(this.tool_exit_Click);
             // 
@@ -195,24 +198,25 @@ namespace Sync
             this.cbo_solution.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbo_solution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbo_solution.Font = new System.Drawing.Font("微软雅黑", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.cbo_solution.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cbo_solution.FormattingEnabled = true;
             this.cbo_solution.Items.AddRange(new object[] {
             "1.DLL调用（需要QQ路径和管理员权限）",
             "3.COM调用（7.5之后版本可能会乱码）"});
-            this.cbo_solution.Location = new System.Drawing.Point(92, 112);
+            this.cbo_solution.Location = new System.Drawing.Point(106, 60);
             this.cbo_solution.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.cbo_solution.Name = "cbo_solution";
-            this.cbo_solution.Size = new System.Drawing.Size(304, 28);
+            this.cbo_solution.Size = new System.Drawing.Size(460, 38);
             this.cbo_solution.TabIndex = 10;
             this.toolTip1.SetToolTip(this.cbo_solution, "由于QQ的接口变动因而需要选择");
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 116);
+            this.label1.Font = new System.Drawing.Font("微软雅黑", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
+            this.label1.Location = new System.Drawing.Point(10, 66);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(74, 21);
+            this.label1.Size = new System.Drawing.Size(92, 27);
             this.label1.TabIndex = 11;
             this.label1.Text = "同步策略";
             // 
@@ -221,17 +225,19 @@ namespace Sync
             this.cbo_process.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbo_process.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbo_process.Font = new System.Drawing.Font("微软雅黑", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.cbo_process.FormattingEnabled = true;
-            this.cbo_process.Location = new System.Drawing.Point(92, 13);
+            this.cbo_process.Location = new System.Drawing.Point(106, 13);
             this.cbo_process.Name = "cbo_process";
-            this.cbo_process.Size = new System.Drawing.Size(304, 28);
+            this.cbo_process.Size = new System.Drawing.Size(460, 38);
             this.cbo_process.TabIndex = 13;
             // 
             // FormMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(408, 378);
+            this.ClientSize = new System.Drawing.Size(578, 459);
+            this.Controls.Add(this.txt_qq);
             this.Controls.Add(this.cbo_process);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
@@ -239,15 +245,15 @@ namespace Sync
             this.Controls.Add(this.lbl_name);
             this.Controls.Add(this.btn_change);
             this.Controls.Add(this.btn_now);
-            this.Controls.Add(this.rtxt_display);
-            this.Controls.Add(this.txt_qq);
             this.Controls.Add(this.btn_unhook);
             this.Controls.Add(this.btn_hook);
+            this.Controls.Add(this.rtxt_display);
             this.Font = new System.Drawing.Font("微软雅黑", 9.267326F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.MaximizeBox = false;
+            this.MaximumSize = new System.Drawing.Size(800, 600);
+            this.MinimumSize = new System.Drawing.Size(445, 330);
             this.Name = "FormMain";
             this.Text = "Sync->QQ  by Ulysses";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormMain_FormClosing);

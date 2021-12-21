@@ -14,7 +14,7 @@ namespace Sync.NetEaseUwp
 {
     internal class NetEaseUwpContext : DataConnection
     {
-        public NetEaseUwpContext(string nameOrConnectionString) : base(new SQLiteDataProvider(), nameOrConnectionString)
+        public NetEaseUwpContext(string nameOrConnectionString) : base(new SQLiteDataProvider(ProviderName.SQLite), nameOrConnectionString)
         {
         }
 

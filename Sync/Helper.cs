@@ -17,7 +17,7 @@ namespace Sync
 
         public static object ForceChangeEncoding(string text)
         {
-            string s = text;
+            string s;
             try
             {
                 s = Encoding.Default.GetString(Encoding.UTF8.GetBytes(text));
@@ -36,14 +36,13 @@ namespace Sync
         /// <param name="content">内容</param>
         public static void Send2QQ(string qqNum, string content, bool usePInvoke = true, bool useForceEncoding = false)
         {
-            int p;
             try
             {
-                if (int.TryParse(qqNum, out p))
+                if (uint.TryParse(qqNum, out var p))
                 {
                     if (usePInvoke)
                     {
-                        PutRSInfo((uint)p, RSID_QQ_MUSIC, content, "");
+                        PutRSInfo(p, RSID_QQ_MUSIC, content, "");
                         return;
                     }
                     var objAdminType = Type.GetTypeFromProgID("QQCPHelper.CPAdder");

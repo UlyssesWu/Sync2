@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="QQNum" Type="System.String" Scope="User">
-      <Value Profile="(Default)">2094966351</Value>
+      <Value Profile="(Default)">3575518082</Value>
     </Setting>
     <Setting Name="AppName" Type="System.String" Scope="User">
       <Value Profile="(Default)">cloudmusic</Value>
