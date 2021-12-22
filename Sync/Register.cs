@@ -6,18 +6,20 @@ namespace Sync
 {
     static class Register
     {
-        static RegistryKey registryKey = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths");
-
-        static RegistryKey qqRegistryKey = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Software\\Tencent\\bugReport\\QQ");
-
-
         public static string GetPath(string name)
         {
-            var k = registryKey.OpenSubKey(name);
-            if (k != null)
+            try
             {
-                return k.GetValue(null).ToString();
+                var k = Microsoft.Win32.Registry.LocalMachine.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths").OpenSubKey(name);
+                if (k != null)
+                {
+                    return k.GetValue(null).ToString();
+                }
             }
+            catch (Exception e)
+            {
+            }
+
             return "";
         }
 
@@ -25,7 +27,7 @@ namespace Sync
         {
             try
             {
-                var k = qqRegistryKey.GetValue("InstallDir");
+                var k = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("Software\\Tencent\\bugReport\\QQ").GetValue("InstallDir");
                 if (k != null)
                 {
                     return Path.Combine(k.ToString(), "Bin");
