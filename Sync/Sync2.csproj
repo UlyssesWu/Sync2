@@ -146,7 +146,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="EasyHook">
-      <Version>2.7.6789</Version>
+      <Version>2.7.7097</Version>
     </PackageReference>
     <PackageReference Include="linq2db">
       <Version>3.6.0</Version>
